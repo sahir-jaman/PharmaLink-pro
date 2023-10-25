@@ -13,13 +13,12 @@ from common.utils import get_email_slug
 
 # user manageer
 class UserManager(BaseUserManager):
-    def create_user(self, email, name, password=None, **extra_fields):
+    def create_user(self, email,password=None, **extra_fields):
         if not email:
             raise ValueError("Users must have an email address")
 
         user = self.model(
             email=self.normalize_email(email),
-            name=name,
         )
 
         user.set_password(password)
@@ -39,7 +38,7 @@ class UserManager(BaseUserManager):
 # Create your models here.
 class User(AbstractBaseUser, BaseModelWithUid):
     email = models.EmailField(verbose_name="email address",max_length=255,unique=True)
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, blank=True)
     phone = PhoneNumberField(unique=True, null=True, blank=True)
     slug = AutoSlugField(populate_from=get_email_slug, unique=True)
     gender = models.CharField(max_length=10, blank=True)
